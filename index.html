@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Survival Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Titanic Survival Prediction</h1>
+        <form id="prediction-form">
+            <label for="sex">Sex:</label>
+            <select name="sex" id="sex">
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+            </select><br>
+            <label for="age">Age:</label>
+            <input type="number" name="age" id="age" step="0.01" required><br>
+            <label for="siblings">Siblings:</label>
+            <input type="number" name="siblings" id="siblings" required><br>
+            <label for="parent_children">Parent / Children:</label>
+            <input type="number" name="parent_children" id="parent_children" required><br>
+            <label for="fare">Fare:</label>
+            <input type="number" name="fare" id="fare" step="0.01" required><br>
+            <label for="embarked">Embarked:</label>
+            <select name="embarked" id="embarked">
+                <option value="C">C</option>
+                <option value="Q">Q</option>
+                <option value="S">S</option>
+            </select><br>
+            <label for="class">Class:</label>
+            <select name="class" id="class">
+                <option value="First">First</option>
+                <option value="Second">Second</option>
+                <option value="Third">Third</option>
+            </select><br>
+            <label for="who">Who:</label>
+            <select name="who" id="who">
+                <option value="child">Child</option>
+                <option value="man">Man</option>
+                <option value="woman">Woman</option>
+            </select><br>
+            <label for="alone">Alone:</label>
+            <select name="alone" id="alone">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select><br>
+            <input type="submit" value="Predict">
+        </form>
+        <div id="result">
+            <h2>Prediction Result</h2>
+            <p id="prediction"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/predict', true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('prediction').innerText = response.prediction === 1 ? '1 (Survived)' : '0 (Did not survive)';
+                }
+            };
+
+            xhr.send(formData);
+        });
+    </script>
+</body>
+</html>
